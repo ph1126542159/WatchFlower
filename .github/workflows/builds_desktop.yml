@@ -90,6 +90,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }} 
 
+      - name: Check GITHUB_TOKEN
+        run: |
+          if [ -z "${{ secrets.GITHUB_TOKEN }}" ]; then
+          echo "GITHUB_TOKEN is not set ${{ secrets.GITHUB_TOKEN }}"
+          else
+            echo "GITHUB_TOKEN is set"
+          fi
+
+      # 上传 Release 资产
+
      # 上传 ZIP 文件到 Release
       - name: Upload app ZIP
         uses: actions/upload-release-asset@v1
