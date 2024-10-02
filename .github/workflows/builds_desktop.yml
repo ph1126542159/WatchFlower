@@ -73,8 +73,8 @@ jobs:
       - name: Get the tag name
         id: get_tag_name
         run: |
-          TAG_NAME=${GITHUB_REF#refs/tags/}
-          echo "tag_name=$TAG_NAME" >> $GITHUB_ENV
+          $TAG_NAME = $env:GITHUB_REF -replace 'refs/tags/', ''
+          echo "tag_name=$TAG_NAME" >> $env:GITHUB_ENV
           echo "::set-output name=tag_name::$TAG_NAME"
 
       # 创建 Release
