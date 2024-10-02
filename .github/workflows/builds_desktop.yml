@@ -22,104 +22,6 @@ env:
 #-------------------------------------------------------------------------------
 
 jobs:
-  ## GNU/Linux build ###########################################################
-  build-linux:
-    name: "Linux CI build"
-    runs-on: ubuntu-20.04
-    steps:
-      # Checkout the repository (and submodules)
-      - name: Checkout repository (and submodules)
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      # Install Qt
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v3
-        with:
-          version: ${{env.QT_VERSION}}
-          modules: qtconnectivity qtcharts qtshadertools qt5compat
-
-      # Install dependencies (from package manager)
-      - name: Install dependencies (from package manager)
-        run: |
-             sudo apt-get install libgl1-mesa-dev libxcb1-dev libxkbcommon-x11-dev libx11-xcb-dev libxcb-cursor0 libzstd-dev -y;
-             sudo apt-get install appstream -y;
-
-      # Setup env
-      - name: Setup env
-        run: |
-             qmake --version
-
-      # Build application
-      - name: Build application
-        run: |
-             qmake ${{env.APP_NAME}}.pro CONFIG+=release PREFIX=/usr
-             make -j$(nproc)
-
-      # Deploy application
-      - name: Deploy application
-        run: ./deploy_linux.sh -c -i -p
-
-      # Upload archive
-      - name: Upload archive
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
-
-      # Upload AppImage
-      - name: Upload AppImage
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
-
-  ## macOS build ###############################################################
-  build-mac:
-    name: "macOS CI build"
-    runs-on: macos-12
-    steps:
-      # Checkout the repository (and submodules)
-      - name: Checkout repository (and submodules)
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      # Install dependencies (from package manager)
-      #- name: Install dependencies (from package manager)
-      #  run: |
-      #       brew install qt6 cmake
-
-      # Install Qt
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v3
-        with:
-          version: ${{env.QT_VERSION}}
-          modules: qtconnectivity qtcharts qtshadertools qt5compat
-
-      # Setup env
-      - name: Setup env
-        run: |
-             qmake --version
-
-      # Build application
-      - name: Build application
-        run: |
-             qmake ${{env.APP_NAME}}.pro CONFIG+=release
-             make -j`sysctl -n hw.logicalcpu`
-
-      # Deploy application
-      - name: Deploy application
-        run: ./deploy_macos.sh -c -p
-
-      # Upload app ZIP
-      - name: Upload app ZIP
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
-
   ## Windows build #############################################################
   build-windows:
     name: "Windows CI build"
@@ -173,7 +75,7 @@ jobs:
         id: get_tag_name
         run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
-        
+
 
        # 创建 Release
       - name: Create Release
