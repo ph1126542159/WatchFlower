@@ -75,8 +75,6 @@ jobs:
         id: get_tag_name
         run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
-
-
        # 创建 Release
       - name: Create Release
         id: create_release
@@ -84,8 +82,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         with:
-         tag_name: ${{ env.tag_name }}
-         release_name: Release ${{ env.tag_name }}
+         tag_name: ${{ steps.get_tag_name.outputs.tag_name }}
+         release_name: Release ${{ steps.get_tag_name.outputs.tag_name }}
          draft: false
          prerelease: false
 
