@@ -42,7 +42,7 @@
 #include <QTimer>
 #include <QDebug>
 
-/* ************************************************************************** */
+/* ************************************************************************* */
 
 Device::Device(const QString &deviceAddr, const QString &deviceName, QObject *parent) : QObject(parent)
 {
