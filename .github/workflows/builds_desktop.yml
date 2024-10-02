@@ -167,20 +167,6 @@ jobs:
       - name: Deploy application
         run: sh deploy_windows.sh -c -p
 
-      # Upload app ZIP
-      - name: Upload app ZIP
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
-
-      # Upload NSIS installer
-      - name: Upload NSIS installer
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
-
 
       # 获取标签名称
       - name: Get the tag name
@@ -192,7 +178,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         with:
          tag_name: ${{ env.tag_name }}
          release_name: Release ${{ env.tag_name }}
